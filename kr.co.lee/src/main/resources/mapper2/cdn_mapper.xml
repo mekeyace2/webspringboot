@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.lee.cdn_mapper">
+<insert id="cdn_insert" parameterType="kr.co.lee.file_DTO">
+INSERT INTO API_IMG (ORI_FILE,NEW_FILE,API_FILE,FILE_URL,FILE_DATE)
+VALUES (#{ORI_FILE},#{NEW_FILE},#{API_FILE},#{FILE_URL},SYSDATE)
+</insert>
+</mapper>
