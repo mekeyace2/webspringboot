@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -29,6 +32,30 @@ import jakarta.servlet.ServletResponse;
 public class cdn_controller {
 	
 	Logger log = LoggerFactory.getLogger(this.getClass()); 
+	
+	//@Autowired
+	//dbinfos dbinfs;
+	
+	@GetMapping("/cdn/mysql.do")
+	public String mysql_list() throws Exception {
+		//mysql data로드
+		/*
+		Connection con = this.dbinfs.mysqldb().getConnection();
+		String sql = "select * from event";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		this.log.info(rs.getString("ename"));
+		
+		rs.close();
+		ps.close();
+		con.close();
+		*/
+		return null;
+	}
+	
+	
+	
 	
 	//@Resource로 Controller에서 호출과 Model에서 호출이 다름
 	@Resource(name="file_DTO")
@@ -99,7 +126,9 @@ public class cdn_controller {
 	
 	
 	@GetMapping("/cdn/cdn_filelist.do")
-	public String cdn_filelist(Model m) {
+	public String cdn_filelist(Model m,
+			@RequestParam(name="word", required = false)String word
+		) throws Exception {
 		List<file_DTO> all = this.cs.all(2,this.file_DTO);
 		m.addAttribute("all",all);
 		return null;

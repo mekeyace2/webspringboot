@@ -36,6 +36,13 @@
 </cr:forEach>
 </tbody>
 </table>
+<br><br>
+</form>
+<form id="search" method="get" action="./cdn_filelist.do">
+<div class="input-group mb-3">
+  <input type="text" name="word" class="form-control" placeholder="찾고자 하는 파일명을 입력하세요">
+  <button class="btn btn-outline-secondary" type="button" id="sh_btn">검색</button>
+</div>
 </form>
 <button type="button" class="btn btn-danger" id="btn">선택삭제</button>
 </body>
@@ -44,5 +51,10 @@ import {cdn_lists} from "./cdn.js";
 document.querySelector("#btn").addEventListener("click",function(){
 	new cdn_lists().cdn_listdel();
 });
+
+document.querySelector("#sh_btn").addEventListener("click",function(){
+	new cdn_lists().cdn_search();
+});
+
 </script>
 </html>

@@ -1,5 +1,15 @@
 export class cdn_lists{
 	
+	cdn_search(){
+		if(search.word.value==""){
+			alert("검색어를 입력하세요");
+		}	
+		else{
+			search.submit();
+		}
+	}
+		
+	
 	cdn_listdel(){
 			//querySelector : 한 개의 오브젝트 값을 가져오는 역활
 			//querySelectorAll : 한 개 이상의 같은 이름을 가진 오브젝트를 가져오는 역활

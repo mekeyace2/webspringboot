@@ -5,7 +5,6 @@
 INSERT INTO API_IMG (ORI_FILE,NEW_FILE,API_FILE,FILE_URL,FILE_BIN,FILE_DATE)
 VALUES (#{ORI_FILE},#{NEW_FILE},#{API_FILE},#{FILE_URL},#{FILE_BIN},SYSDATE)
 </insert>
-
 <select id="cdn_select" resultType="kr.co.lee.file_DTO" parameterType="Map">
 select * from API_IMG 
 <if test="part==1">
@@ -13,6 +12,10 @@ where AIDX = #{AIDX} order by AIDX desc
 </if>
 <if test="part==2">
 order by AIDX desc
+</if>
+<!-- 사용자가 업로드한 파일명으로 검색 -->
+<if test="part==3">
+where ORI_FILE like '%'||#{word}||'%' order by AIDX desc
 </if>
 </select>
 
