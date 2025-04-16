@@ -7,6 +7,8 @@ import java.util.Date;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +18,8 @@ import jakarta.annotation.Resource;
 @Repository ("cdn_model")
 public class cdn_model {
 	//FTP 정보를 외부에서 수정되지 않도록 설정
-	final String user = "";
-	final String pass = "";
+	final String user = "testuser";
+	final String pass = "a10041004!";
 	final int port = 21;
 	
 	FTPClient fc = null;
@@ -30,7 +32,9 @@ public class cdn_model {
 	
 	@Resource(name="file_DTO")
 	file_DTO file_DTO;
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
+		
 	
 	//CDN Server로 해당 파일을 전송하는 역활을 담당한 model
 	public boolean cdn_ftp(MultipartFile files,String url) throws Exception {
@@ -49,7 +53,9 @@ public class cdn_model {
 				 
 				 //FTP 디렉토리 경로를 설정 후 해당 파일을 Byte로 전송
 				 this.result = this.fc.storeFile("/apink/"+new_file, files.getInputStream());
-				 
+
+				 //Oracle CLOB(Ascii), BLOB(Binary)
+				 this.file_DTO.setFILE_BIN(files.getBytes());
 				 
 				 //DB저장
 				 this.file_DTO.setORI_FILE(files.getOriginalFilename());
@@ -62,7 +68,7 @@ public class cdn_model {
 				 this.file_DTO.setFILE_URL(api_url);
 				 
 				 int result2 = this.cs.cdn_insert(this.file_DTO);
-				
+			
 				 //Database에 insert 부분에 문제가 발생시 false로 변경하여 Controller로 이관
 				 if(result2 == 0) {
 					 this.result = false;

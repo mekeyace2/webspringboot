@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.lee.cdn_mapper">
 <insert id="cdn_insert" parameterType="kr.co.lee.file_DTO">
-INSERT INTO API_IMG (ORI_FILE,NEW_FILE,API_FILE,FILE_URL,FILE_DATE)
-VALUES (#{ORI_FILE},#{NEW_FILE},#{API_FILE},#{FILE_URL},SYSDATE)
+INSERT INTO API_IMG (ORI_FILE,NEW_FILE,API_FILE,FILE_URL,FILE_BIN,FILE_DATE)
+VALUES (#{ORI_FILE},#{NEW_FILE},#{API_FILE},#{FILE_URL},#{FILE_BIN},SYSDATE)
 </insert>
+
+<select id="cdn_select" resultType="kr.co.lee.file_DTO">
+select * from API_IMG order by AIDX desc
+</select>
+
+<select id="cdn_images" resultType="kr.co.lee.file_DTO" parameterType="String">
+select FILE_URL from API_IMG where API_FILE=#{APINO}
+</select>
+
+
+
+
 </mapper>

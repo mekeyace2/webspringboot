@@ -9,5 +9,5 @@ import lombok.Data;
 public class file_DTO {
 	int AIDX;
 	String ORI_FILE, NEW_FILE, API_FILE, FILE_URL, FILE_DATE;
-	byte[] FILE_BIN;	//BLOB
+	byte[] FILE_BIN;	//BLOB, CLOB => 다운로드
 }
