@@ -17,7 +17,9 @@ export class cdn_lists{
 				alert("선택 삭제시 하나라도 선택이 되어야만 삭제 진행 됩니다.");
 			}
 			else{
-				frm.submit();
+				if(confirm("삭제시 데이터는 복구 되지 않습니다. \n삭제 진행 하시겠습니까?")){
+					frm.submit();
+				}
 			}
 			
 	}

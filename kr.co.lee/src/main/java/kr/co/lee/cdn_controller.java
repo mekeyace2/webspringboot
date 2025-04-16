@@ -48,12 +48,32 @@ public class cdn_controller {
 	 2. 데이터 검색어를 받을 경우
 	 3. 사용자가 페이지 번호를 누를 경우
 	*/
-	
+	/*
+	 응용문제 : FTP에 파일이 없을 경우 DB가 삭제 되지 않는 버그가 발생함
+	 해당 버그를 수정하여 FTP에 파일이 없어도 DB에 데이터가 삭제 되도록 수정 
+	*/
 	
 	@PostMapping("/cdn/cdn_delete.do")
-	public String cdn_delete() {
+	public String cdn_delete(@RequestParam(name = "cbox")String cbox[]) throws Exception {
+		//this.log.info(String.valueOf(cbox.length));
 		
-		return null;
+		int countck = 0;	//성공한 결과만 +1 증가시키는 변수
+		
+		for(String idx : cbox) {
+			this.file_DTO.setAIDX(Integer.parseInt(idx));	//필드에 있는 dto에 setter로 이관
+			List<file_DTO> one = this.cs.all(1, this.file_DTO);	//service에 DTO값 전달
+			boolean result = this.cdn_model.cdn_ftpdel(one.get(0).getNEW_FILE(),idx);	//개발자가 생성한 파일명을 출력
+			if(result == true) {	//파일 삭제도 되고, Database도 삭제가 된 경우
+				countck++;
+			}
+		}
+		if(cbox.length == countck) {
+			this.log.info("정상적으로 모두 삭제 완료 되었습니다.");
+		}else {
+			this.log.info("삭제 되지 않은 데이터가 있습니다.");
+		}
+		//해당 do 로 이동하는 방식
+		return "redirect:/cdn/cdn_filelist.do";
 	}
 	
 	//@ResponseBody : return 결과값을 즉시실행 하여 해당 메소드에 출력하는 역활
@@ -80,7 +100,7 @@ public class cdn_controller {
 	
 	@GetMapping("/cdn/cdn_filelist.do")
 	public String cdn_filelist(Model m) {
-		List<file_DTO> all = this.cs.all();
+		List<file_DTO> all = this.cs.all(2,this.file_DTO);
 		m.addAttribute("all",all);
 		return null;
 	}

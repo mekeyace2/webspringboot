@@ -34,7 +34,32 @@ public class cdn_model {
 	file_DTO file_DTO;
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	//CDN Server에 있는 해당 파일을 삭제하는 역활 model
+	public boolean cdn_ftpdel(String newfiles, String idx) throws Exception {
 		
+		this.fc = new FTPClient();
+		this.fcc = new FTPClientConfig();
+		this.fc.configure(this.fcc);
+		this.fc.connect("kbsn.or.kr",this.port);
+		this.fc.enterLocalPassiveMode();	//PASSIVEMODE로 셋팅함 (FTP 접속환경)
+		
+		//PASSIVEMODE : 가상 PORT를 이용하여 연결을 설정
+		//deleteFile : FTP에 접속된 서버에서 해당 경로에 있는 파일을 삭제하는 class
+		//makeDirectory : FTP 접속 서버에 디렉토리를 생성
+		//removeDirectory : FTP  접속 서버에 디렉토리를 삭제
+		
+		if(this.fc.login(this.user, this.pass)) {
+			//FTP 서버에서 파일 삭제
+			this.result = this.fc.deleteFile("/apink/"+newfiles);
+			if(this.result == true) {	//정상적으로 FTP 파일을 삭제 한 후
+				this.cs.cdn_delete(idx);	//고유값으로 DB내용을 삭제
+			}
+		}
+			
+		return this.result;
+	}
+		
+	
 	
 	//CDN Server로 해당 파일을 전송하는 역활을 담당한 model
 	public boolean cdn_ftp(MultipartFile files,String url) throws Exception {

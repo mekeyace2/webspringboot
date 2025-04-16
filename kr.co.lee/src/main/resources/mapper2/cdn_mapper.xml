@@ -6,13 +6,25 @@ INSERT INTO API_IMG (ORI_FILE,NEW_FILE,API_FILE,FILE_URL,FILE_BIN,FILE_DATE)
 VALUES (#{ORI_FILE},#{NEW_FILE},#{API_FILE},#{FILE_URL},#{FILE_BIN},SYSDATE)
 </insert>
 
-<select id="cdn_select" resultType="kr.co.lee.file_DTO">
-select * from API_IMG order by AIDX desc
+<select id="cdn_select" resultType="kr.co.lee.file_DTO" parameterType="Map">
+select * from API_IMG 
+<if test="part==1">
+where AIDX = #{AIDX} order by AIDX desc
+</if>
+<if test="part==2">
+order by AIDX desc
+</if>
 </select>
 
 <select id="cdn_images" resultType="kr.co.lee.file_DTO" parameterType="String">
 select FILE_URL from API_IMG where API_FILE=#{APINO}
 </select>
+
+<delete id="cdn_delete" parameterType="String">
+delete from API_IMG where AIDX=#{AIDX}
+</delete>
+
+
 
 
 
