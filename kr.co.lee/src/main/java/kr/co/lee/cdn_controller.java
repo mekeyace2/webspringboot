@@ -1,6 +1,9 @@
 package kr.co.lee;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -9,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import io.netty.util.ByteProcessor.IndexOfProcessor;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 //CDN 전용 컨트롤러
 @Controller
@@ -80,6 +85,35 @@ public class cdn_controller {
 	 해당 버그를 수정하여 FTP에 파일이 없어도 DB에 데이터가 삭제 되도록 수정 
 	*/
 	
+	
+	//사용자가 해당 파일을 클릭시 파일을 자신의 PC, Mobile에 다운로드 할 수 있는 API 메소드
+	@GetMapping("/cdn/download.do/{filenm}")
+	public void downloads(@PathVariable(name="filenm")String filenm,
+			HttpServletResponse res) throws Exception {
+		//외부에서 이미지 및 파일, 동영상을 FTP URL로 읽어서 byte로 변환시 무조건 File 객체 이용
+		/* ftp://
+		File f = new File(filenm);	//FTP 경로를 로드한 후에 byte 변환
+		byte[] files = FileUtils.readFileToByteArray(f);
+		*/
+		
+		//서버 경로에 맞는 파일을 로드
+		URL url = new URL("http://kbsn.or.kr/apink/" + filenm);
+		//http 통신
+		HttpURLConnection httpcon = (HttpURLConnection)url.openConnection();
+		//해당 경로에 이미지를 byte 읽어들임
+		InputStream is = new BufferedInputStream(httpcon.getInputStream());
+		
+		//해당 Controller에서 파일을 다운로드 받을 수 있도록 처리
+		res.setHeader("content-transfer-encoding", "binary");
+		res.setContentType("application/x-download");
+		
+		OutputStream os = res.getOutputStream();	//파일을 저장 할 수 있도록 설정
+		IOUtils.copy(is, os);	//서버에 있는 값을 PC로 복제하는 역활
+		os.flush();
+		os.close();
+		is.close();
+	}
+		
 	@PostMapping("/cdn/cdn_delete.do")
 	public String cdn_delete(@RequestParam(name = "cbox")String cbox[]) throws Exception {
 		//this.log.info(String.valueOf(cbox.length));
@@ -124,12 +158,21 @@ public class cdn_controller {
 		return img;
 	}
 	
-	
 	@GetMapping("/cdn/cdn_filelist.do")
 	public String cdn_filelist(Model m,
-			@RequestParam(name="word", required = false)String word
+			@RequestParam(name="word", defaultValue = "", required = false)String word
 		) throws Exception {
-		List<file_DTO> all = this.cs.all(2,this.file_DTO);
+		
+		List<file_DTO> all = null;
+		
+		if(word.equals("")) { //검색어 없을 경우
+			all = this.cs.all(2,this.file_DTO);
+		}
+		else {	//검색어가 있을 경우
+			this.file_DTO.setWord(word);	//setter로 DTO에 값을 이관
+			all = this.cs.all(3,this.file_DTO);
+		}
+		
 		m.addAttribute("all",all);
 		return null;
 	}
