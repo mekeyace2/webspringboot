@@ -13,6 +13,12 @@ public class cdn_service {
 	@Autowired
 	cdn_mapper mp;
 	
+	//AOP log insert
+	public int log_table(String mid) {
+		int result = this.mp.log_table(mid);
+		return result;
+	}
+	
 	public int cdn_delete(String AIDX) {
 		int result = this.mp.cdn_delete(AIDX);
 		return result;

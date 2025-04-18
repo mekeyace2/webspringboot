@@ -40,7 +40,6 @@ public class cdn_controller {
 	
 	//@Autowired
 	//dbinfos dbinfs;
-	
 	@GetMapping("/cdn/mysql.do")
 	public String mysql_list() throws Exception {
 		//mysql data로드

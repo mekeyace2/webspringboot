@@ -3,12 +3,12 @@ package kr.co.lee;
 //Controller, Service
 
 public class exam implements examinterface {
-	/*
+/*	
 	public static void main(String[] args) {
 		int result = new exam().total();
 		System.out.println(result);
 	}
-	*/
+*/	
 	
 	@Override
 	public int total() {
