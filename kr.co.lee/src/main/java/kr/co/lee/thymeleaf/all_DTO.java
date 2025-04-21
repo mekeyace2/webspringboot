@@ -11,5 +11,5 @@ import lombok.Data;
 @Repository("all_DTO")
 public class all_DTO {
 	ArrayList<String> menus;
-	
+	String mid, mpass, memail;
 }

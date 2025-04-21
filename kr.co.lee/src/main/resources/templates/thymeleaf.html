@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Thymeleaf 전체 구문 기본언어(SpringEL 표현식)</title>
+<!-- SpringEL -->
+</head>
+<body>
+<!--  th:text : innerTEXT,  th:utext : innerHTML-->
+
+<div th:text="${code}"></div><br>
+<div th:utext="${code}"></div><br><br>
+
+<span>[[${code}]]</span><br> <!-- 태그 안에 직접 변수값을 출력(TEXT) -->
+<span>[(${code})]</span> <!-- 태그 안에 직접 변수값을 출력(HTML) -->
+
+<p>사용자 정보</p>
+<ul>
+<li>[[${all["mid"]}]]</li> <!-- all["mid"] or all.mid -->
+<li>[[${all.mage}]]</li>
+</ul>
+<!-- th:value : input에 value에 데이터를 출력해야 할 경우 -->
+<p>검색어 : <input type="text" name="search" th:value="${search}"></p>
+<!-- th:href : |링크주소 및 변수값| 정상적인 href로 인식하여 GET으로 이동 -->
+<a th:href="|./page.do?url=${page}|">링크</a>
+<br><br>
+<!-- ${session.키값} : Controller에서 등록된 Session값을 가져올 때 사용합니다. -->
+<div th:text="${session.muser}"></div><br>
+<div>[[${session.muser}]]</div>
+
+<!-- Thymeleaf 의 변수 선언 -->
+<!-- th:with : 가상의 변수를 선언 사용방법 => th:width="가상변수명=값" -->
+<span th:with="product='냉장고'">
+<p>[[${product}]]</p> <!-- th:with를 선언시 해당 마크업 기준에서만 출력가능 -->
+</span>
+
+<!-- th:if : Thymeleaf 조건문으로 오브젝트 관련사항을 핸들링 할 수 있습니다. -->
+<span th:if="${result=='ok'}">동의함</span>
+<!--
+<span th:if="${result=='no'}">동의안함</span>
+-->
+
+<!-- 
+th:unless="${result=='no'}" => no가 아닐경우 
+th:unless="${result!='ok'} => ok가 부정 부정 => ok일 경우
+-->
+<span th:unless="${result!='ok'}">동의안함</span>
+
+
+</body>
+</html>
